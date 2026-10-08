@@ -7,7 +7,7 @@ Both series come from FRED and are monthly and seasonally adjusted:
 - **CPIAUCSL**: Consumer Price Index for All Urban Consumers (inflation)
 - **CES0500000003**: Average Hourly Earnings of All Employees, Total Private (wages)
 
-Cleaning steps (in `analysis.py`):
+Cleaning steps (in `okun_law_v2.ipynb`):
 
 1. Merged the two series by month and dropped months with missing values.
 2. Built a **real wage** by deflating nominal hourly earnings with CPI, expressed in Aug 2026 dollars.
@@ -43,6 +43,19 @@ Interpretation: each extra percentage point of inflation goes with about **0.69 
 
 **Robustness check:** In 2020–2021, many low-wage workers lost their jobs, and that pushed *average* hourly earnings up artificially. That explains the April 2020 spike in the line chart. Dropping those two years leaves the result almost unchanged (slope −0.63, R² = 0.72, n = 209).
 
+### Is the negative slope built in? Nominal wage growth on inflation
+
+Real wage growth is roughly nominal wage growth minus inflation. If nominal wages ignored inflation, the slope above would be about −1 just from that definition. The real test is whether nominal wages keep up with prices:
+
+Nominal wage growth = a + c × inflation
+
+| | Slope (c) | R² | Months |
+|---|---|---|---|
+| Full sample | **0.30** | 0.25 | 233 |
+| Excluding 2020–2021 | **0.35** | 0.44 | 209 |
+
+A slope of 1 would mean wages rise one-for-one with prices. The estimate is about 0.3: each extra point of inflation goes with only about 0.3 points of extra nominal wage growth. The two regressions are consistent, since 0.30 − 1 ≈ −0.70, close to the real-wage slope of −0.69.
+
 ## Annual averages (%)
 
 | Year | Inflation | Nominal wage growth | Real wage growth |
@@ -72,6 +85,6 @@ Interpretation: each extra percentage point of inflation goes with about **0.69 
 
 ## Conclusion
 
-**My expectation is supported.** Periods of higher inflation are clearly associated with lower real wage growth, and the regression shows a strong, statistically significant negative relationship. Nominal wages adjust slowly: their growth stayed between about 2% and 5.4% a year, while inflation swung from −0.3% to 8%. So inflation spikes cut directly into purchasing power. The clearest example is 2022: nominal wages grew 5.4%, but prices rose 8.0%, so real wages fell 2.4%.
+**My expectation is supported, but the evidence comes from the nominal wage regression.** Most of the −0.69 real-wage slope is built in by definition. The nominal regression shows that wages rise only about 0.3 points for each extra point of inflation, so they do not keep up with prices and real wages fall when inflation rises. Nominal wage growth stayed between about 2% and 5.4% a year, while inflation swung from −0.3% to 8%. The clearest example is 2022: nominal wages grew 5.4%, but prices rose 8.0%, so real wages fell 2.4%.
 
-**Limitations:** This is a correlation, not proof of causation. Also, real wage growth is partly *defined* by inflation (real growth ≈ nominal growth − inflation). Because nominal wages are sticky, a negative slope is partly built in by that definition. A deeper analysis could regress nominal wage growth on inflation, or add controls such as the unemployment rate.
+**Limitations:** This is a correlation, not proof of causation, and there are no controls such as the unemployment rate. Year-over-year rates from consecutive months overlap, so the fits look more precise than they are. Wages may catch up with inflation after a delay, which same-month regressions miss.
